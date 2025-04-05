@@ -1,25 +1,32 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import React, { useState } from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Using MaterialIcons for simplicity
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from "react-native";
+import React, { useState } from "react";
+import Icon from "react-native-vector-icons/MaterialIcons"; // Using MaterialIcons for simplicity
 
 const SignupPage = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignIn = () => {
     // Add your sign-in logic here (e.g., API call)
-    navigation.navigate('Signin');
-    console.log('Sign In with:', email, password);
+    navigation.navigate("Signin");
     // Navigate to the next screen (e.g., Home) after successful sign-in
     // navigation.navigate('Home');
   };
 
   const handleSignUp = () => {
     // Navigate to SignUp screen (you can create this later)
-    navigation.navigate('SignUp');
+    navigation.navigate("OtpPage");
     // console.log('Navigate to Sign Up');
   };
 
@@ -27,21 +34,12 @@ const SignupPage = ({ navigation }) => {
     <View className="bg-white flex-1 justify-center items-center px-5 pb-32">
       {/* Logo */}
       <Image
-        source={require('../assets/foodie_green1.png')}
+        source={require("../assets/foodie_green1.png")}
         className="h-32 w-56"
       />
 
       {/* Title */}
       <Text className="text-3xl mb-3 font-semibold">Sign up</Text>
-      <Text className="text-2xl font-light mb-5">
-        Already have an account?{' '}
-        <Text
-          className="text-[#00bf63] font-medium"
-          onPress={handleSignIn}
-        >
-          Sign in
-        </Text>
-      </Text>
 
       {/* Email Field */}
       <KeyboardAvoidingView className="w-full mb-4">
@@ -67,7 +65,7 @@ const SignupPage = ({ navigation }) => {
             style={styles.input}
             placeholder="Enter your phone number"
             value={phoneNumber}
-            onChangeText={(text) => setPhoneNumber(text.replace(/[^0-9]/g, ''))} // Only allow numbers
+            onChangeText={(text) => setPhoneNumber(text.replace(/[^0-9]/g, ""))} // Only allow numbers
             keyboardType="phone-pad"
             autoCapitalize="none"
             maxLength={15} // Limit length
@@ -89,7 +87,7 @@ const SignupPage = ({ navigation }) => {
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Icon
-              name={showPassword ? 'visibility' : 'visibility-off'}
+              name={showPassword ? "visibility" : "visibility-off"}
               size={24}
               color="#9ca3af"
               style={styles.icon}
@@ -112,7 +110,7 @@ const SignupPage = ({ navigation }) => {
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Icon
-              name={showPassword ? 'visibility' : 'visibility-off'}
+              name={showPassword ? "visibility" : "visibility-off"}
               size={24}
               color="#9ca3af"
               style={styles.icon}
@@ -122,42 +120,46 @@ const SignupPage = ({ navigation }) => {
       </KeyboardAvoidingView>
 
       {/* Sign In Button */}
-      <TouchableOpacity
-        style={styles.signInButton}
-        onPress={handleSignIn}
-      >
+      <TouchableOpacity style={styles.signInButton} onPress={handleSignUp}>
         <Text className="text-white text-lg font-semibold">Sign Up</Text>
       </TouchableOpacity>
+      <Text className="text-2xl font-light mb-5">
+        Already have an account?{" "}
+        <Text className="text-[#00bf63] font-medium" onPress={handleSignIn}>
+          Sign in
+        </Text>
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: "#e5e7eb",
     borderRadius: 8,
     paddingHorizontal: 10,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   input: {
     flex: 1,
     height: 50,
     fontSize: 16,
-    color: '#515452',
+    color: "#515452",
   },
   icon: {
     marginHorizontal: 10,
   },
   signInButton: {
-    backgroundColor: '#00bf63',
+    backgroundColor: "#00bf63",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
   },
 });
 

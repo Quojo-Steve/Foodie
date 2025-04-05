@@ -9,6 +9,7 @@ import OnboardingScreen from './screens/OnBoardingScreen';
 import SignIn from './screens/SignIn';
 import SignupPage from './screens/SignupPage';
 import OtpPage from './screens/OtpPage';
+import PreferencesPage from './screens/PreferencesPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,7 @@ function App() {
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="OtpPage" component={OtpPage} />
+        <Stack.Screen name="Preferences" component={PreferencesPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

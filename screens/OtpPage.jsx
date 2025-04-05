@@ -17,7 +17,7 @@ const OtpPage = () => {
   const navigation = useNavigation();
 
   // States to hold OTP values
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Refs to handle focus on inputs
@@ -103,6 +103,7 @@ const OtpPage = () => {
                 ]}
                 maxLength={1}
                 keyboardType="numeric"
+                className="mr-3"
                 ref={(el) => (inputRefs.current[index] = el)}
               />
             ))}
@@ -119,7 +120,7 @@ const OtpPage = () => {
           {/* Continue Button */}
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate("confetti")}
+            onPress={() => navigation.navigate("Preferences")}
           >
             <Text
               style={{
@@ -151,7 +152,6 @@ const styles = StyleSheet.create({
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 220, // Adjusted width to fit 4 boxes with spacing
     marginBottom: 20,
   },
   otpInput: {

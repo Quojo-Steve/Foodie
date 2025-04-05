@@ -1,5 +1,5 @@
 import {
-    StatusBar,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -25,14 +25,14 @@ const SignIn = ({ navigation }) => {
 
   const handleSignUp = () => {
     // Navigate to SignUp screen (you can create this later)
-    navigation.navigate("OtpPage");
+    navigation.navigate("SignUp");
     // console.log('Navigate to Sign Up');
   };
 
   return (
     <View className="bg-white flex-1 justify-center items-center px-5 pb-32">
-              <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-        
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
       {/* Logo */}
       <Image
         source={require("../assets/foodie_green1.png")}
@@ -41,18 +41,12 @@ const SignIn = ({ navigation }) => {
 
       {/* Title */}
       <Text className="text-3xl mb-3 font-semibold">Sign In</Text>
-      <Text className="text-2xl font-light mb-5">
-        Don't have an account?{" "}
-        <Text className="text-[#00bf63] font-medium" onPress={handleSignUp}>
-          Sign up
-        </Text>
-      </Text>
 
       {/* Email Field */}
       <KeyboardAvoidingView className="w-full mb-4">
         {/* <Text className="text-lg font-medium mb-2 text-gray-300">
           Email Address
-        </Text> */}
+          </Text> */}
         <View style={styles.inputContainer}>
           <Icon name="email" size={24} color="#9ca3af" style={styles.icon} />
           <TextInput
@@ -93,6 +87,12 @@ const SignIn = ({ navigation }) => {
       <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
         <Text className="text-white text-lg font-semibold">Sign In</Text>
       </TouchableOpacity>
+          <Text className="text-2xl font-light mb-5">
+            Don't have an account?{" "}
+            <Text className="text-[#00bf63] font-medium" onPress={handleSignUp}>
+              Sign up
+            </Text>
+          </Text>
     </View>
   );
 };
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: "#e5e7eb",
     borderRadius: 8,
     paddingHorizontal: 10,
     backgroundColor: "transparent",
@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "100%",
     alignItems: "center",
+    marginBottom: 20,
   },
 });
 
