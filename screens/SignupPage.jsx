@@ -1,4 +1,5 @@
 import {
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -19,7 +20,7 @@ const SignupPage = ({ navigation }) => {
 
   const handleSignIn = () => {
     // Add your sign-in logic here (e.g., API call)
-    navigation.navigate("Signin");
+    navigation.replace("Signin");
     // Navigate to the next screen (e.g., Home) after successful sign-in
     // navigation.navigate('Home');
   };
@@ -32,15 +33,12 @@ const SignupPage = ({ navigation }) => {
 
   return (
     <View className="bg-white flex-1 justify-center items-center px-5 pb-32">
+            <StatusBar barStyle="light-content" backgroundColor="#fff" />
       {/* Logo */}
       <Image
         source={require("../assets/foodie_green1.png")}
         className="h-32 w-56"
       />
-
-      {/* Title */}
-      <Text className="text-3xl mb-3 font-semibold">Sign up</Text>
-
       {/* Email Field */}
       <KeyboardAvoidingView className="w-full mb-4">
         {/* <Text className="text-lg font-medium mb-2 text-gray-300">Email Address</Text> */}

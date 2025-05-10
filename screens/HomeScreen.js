@@ -1,160 +1,238 @@
-// Update HomeScreen.js by removing the bottom navigation bar
-import React from 'react';
+import React from "react";
 import {
+  StatusBar,
   View,
   Text,
-  SafeAreaView,
-  TextInput,
+  StyleSheet,
   Image,
+  TextInput,
+  FlatList,
   ScrollView,
   TouchableOpacity,
-  FlatList,
-} from 'react-native';
-import { Card, Icon } from '@ui-kitten/components';
-import * as EvaIcons from '@ui-kitten/eva-icons';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-function HomeScreen({ navigation }) {
-  const recommendedRecipes = [
-    {
-      id: '1',
-      title: 'Duble cheese Burger',
-      image: 'https://via.placeholder.com/150',
-      ingredients: 5,
-      time: '30 min',
-      rating: 2.4,
-    },
-    {
-      id: '2',
-      title: 'Duble cheese Burger',
-      image: 'https://via.placeholder.com/150',
-      ingredients: 5,
-      time: '30 min',
-      rating: 2.4,
-    },
-  ];
+const recipes = [
+  {
+    id: "1",
+    title: "Double cheese Burger",
+    image: require("../assets/burger.jpg"), // Add your image here
+    ingredients: 5,
+    time: "30 min",
+    rating: 2.4,
+  },
+  {
+    id: "2",
+    title: "Grilled Chicken",
+    image: require("../assets/chicken.jpg"),
+    ingredients: 5,
+    time: "25 min",
+    rating: 2.4,
+  },
+  {
+    id: "3",
+    title: "Grilled Chicken",
+    image: require("../assets/chicken.jpg"),
+    ingredients: 5,
+    time: "25 min",
+    rating: 2.4,
+  },
+];
 
-  const savedRecipes = [
-    {
-      id: '3',
-      title: 'Pizza Margherita',
-      image: 'https://via.placeholder.com/150',
-      ingredients: 6,
-      time: '40 min',
-      rating: 4.5,
-    },
-  ];
+const savedRecipes = [];
 
-  const renderRecipeCard = ({ item }) => (
-    <Card className="m-2 w-48 rounded-lg">
-      <Image
-        source={{ uri: item.image }}
-        className="h-32 w-full rounded-t-lg"
-        resizeMode="cover"
-      />
-      <View className="p-2">
-        <Text className="text-base font-semibold">{item.title}</Text>
-        <View className="flex-row justify-between mt-1">
-          <Text className="text-sm text-gray-600">
-            {item.ingredients} ingredients
-          </Text>
-          <View className="flex-row items-center">
-            <Icon
-              name="clock-outline"
-              {...EvaIcons.ClockOutline}
-              width={16}
-              height={16}
-              fill="#666"
-            />
-            <Text className="text-sm text-gray-600 ml-1">{item.time}</Text>
-          </View>
-        </View>
-        <View className="flex-row items-center mt-1">
-          <Icon
-            name="star"
-            {...EvaIcons.Star}
-            width={16}
-            height={16}
-            fill="#FFD700"
-          />
-          <Text className="text-sm text-gray-600 ml-1">{item.rating}</Text>
-        </View>
+const RecipeCard = ({ item }) => (
+  <View style={styles.card}>
+    <Image source={item.image} style={styles.cardImage} />
+    <Text style={styles.cardTitle}>{item.title}</Text>
+    <Text style={styles.cardDetails}>
+      {item.ingredients} ingredients ⏱ {item.time}
+    </Text>
+    <View style={styles.ratingRowMain}>
+      <View style={styles.ratingRow}>
+        <Ionicons name="star" size={16} color="gold" />
+        <Text style={styles.ratingText}>{item.rating}</Text>
       </View>
-    </Card>
-  );
+      <TouchableOpacity
+        style={{
+          alignItems: "center",
+        }}
+      >
+        <Ionicons name="bookmarks-outline" size={14} color="black" />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
 
+const HomeScreen = ({ navigation }) => {
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <ScrollView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4 py-3">
-        <TouchableOpacity onPress={() => navigation.navigate('ProfileTab')}>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/40' }}
-            className="w-10 h-10 rounded-full"
-          />
-        </TouchableOpacity>
-        <Text className="text-xl font-bold text-green-600">DishDash</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-          <View className="relative">
-            <Icon
-              name="bell-outline"
-              {...EvaIcons.BellOutline}
-              width={24}
-              height={24}
-              fill="#000"
-            />
-            <View className="absolute -top-1 -right-1 bg-green-500 rounded-full w-5 h-5 flex items-center justify-center">
-              <Text className="text-white text-xs">5</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      {/* Search Bar */}
-      <View className="mx-4 my-2">
-        <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
-          <Icon
-            name="search-outline"
-            {...EvaIcons.SearchOutline}
-            width={20}
-            height={20}
-            fill="#666"
-          />
-          <TextInput
-            placeholder="Search for a recipe"
-            className="ml-2 flex-1 text-base"
-          />
-        </View>
-      </View>
-
-      {/* Recommended Recipes Section */}
-      <View className="mt-4">
-        <Text className="text-lg font-semibold px-4 mb-2">
-          Recommended Recipes
-        </Text>
-        <FlatList
-          data={recommendedRecipes}
-          renderItem={renderRecipeCard}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="px-2"
+      <View style={styles.header}>
+        <Image
+          source={{ uri: "https://i.pravatar.cc/50" }}
+          style={styles.profilePic}
         />
+        <Text style={styles.appName}>Foodie</Text>
+        <TouchableOpacity>
+          <Ionicons name="notifications-outline" size={24} />
+        </TouchableOpacity>
       </View>
 
-      {/* Saved Recipes Section */}
-      <View className="mt-4 flex-1">
-        <Text className="text-lg font-semibold px-4 mb-2">Saved Recipes</Text>
+      {/* Search Bar - Fixed with TouchableOpacity instead of View */}
+      <TouchableOpacity 
+        style={styles.searchBox} 
+        onPress={() => navigation.navigate("Search")}
+      >
+        <Ionicons name="search" size={20} color="#888" />
+        <Text style={styles.searchInput}>Search for a recipe</Text>
+      </TouchableOpacity>
+
+      {/* Recommended Recipes */}
+      <Text style={styles.sectionTitle}>Recommended Recipes</Text>
+      <FlatList
+        data={recipes}
+        style={styles.flatListContainer}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <RecipeCard item={item} />}
+      />
+
+      {/* Saved Recipes */}
+      <Text style={styles.sectionTitle}>Saved Recipes</Text>
+      {savedRecipes.length > 0 ? (
         <FlatList
           data={savedRecipes}
-          renderItem={renderRecipeCard}
-          keyExtractor={(item) => item.id}
           horizontal
+          style={styles.flatListContainer}
           showsHorizontalScrollIndicator={false}
-          className="px-2"
+          keyExtractor={(item) => item.id + "saved"}
+          renderItem={({ item }) => <RecipeCard item={item} />}
         />
-      </View>
-    </SafeAreaView>
+      ) : (
+        <View style={styles.emptyStateContainer}>
+          <Ionicons
+            name="bookmarks-outline"
+            size={44}
+            color="gray"
+            style={{ marginBottom: 8 }}
+          />
+          <Text style={styles.emptyStateText}>
+            There is no saved items. Bookmark your favourites and see your
+            recipe history
+          </Text>
+        </View>
+      )}
+    </ScrollView>
   );
-}
+};
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  container: { 
+    padding: 16, 
+    marginBottom: 60, 
+    backgroundColor: "white" 
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  profilePic: {
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+  },
+  appName: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#00bf63",
+  },
+  searchBox: {
+    flexDirection: "row",
+    backgroundColor: "#d7d7d7",
+    padding: 8,
+    borderRadius: 10,
+    marginTop: 16,
+    alignItems: "center",
+  },
+  searchInput: {
+    marginLeft: 10,
+    flex: 1,
+    color: "#888",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 24,
+    marginBottom: 12,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    marginRight: 12,
+    width: 230,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+    paddingBottom: 10,
+  },
+  cardImage: {
+    width: "100%",
+    height: 150,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+  },
+  cardTitle: {
+    fontWeight: "bold",
+    fontSize: 19,
+    marginTop: 6,
+    marginHorizontal: 8,
+  },
+  cardDetails: {
+    fontSize: 14,
+    color: "#666",
+    marginHorizontal: 8,
+    marginTop: 2,
+  },
+  ratingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 8,
+    marginTop: 4,
+  },
+  ratingRowMain: {
+    flex: 1,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 8,
+    marginTop: 4,
+  },
+  ratingText: {
+    marginLeft: 4,
+    fontSize: 14,
+  },
+  flatListContainer: {
+    paddingHorizontal: 2,
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    paddingHorizontal: 20,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    marginTop: 8,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 22,
+  }
+});

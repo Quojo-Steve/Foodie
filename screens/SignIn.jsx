@@ -15,23 +15,24 @@ const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const handleSignIn = () => {
     // Add your sign-in logic here (e.g., API call)
-    console.log("Sign In with:", email, password);
+   // console.log("Sign In with:", email, password);
+  
+    navigation.replace("Main");
     // Navigate to the next screen (e.g., Home) after successful sign-in
     // navigation.navigate('Home');
   };
 
   const handleSignUp = () => {
     // Navigate to SignUp screen (you can create this later)
-    navigation.navigate("SignUp");
+    navigation.replace("SignUp");
     // console.log('Navigate to Sign Up');
   };
 
   return (
     <View className="bg-white flex-1 justify-center items-center px-5 pb-32">
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <StatusBar barStyle="light-content" backgroundColor="#fff" />
 
       {/* Logo */}
       <Image
@@ -39,10 +40,6 @@ const SignIn = ({ navigation }) => {
         className="h-32 w-56"
       />
 
-      {/* Title */}
-      <Text className="text-3xl mb-3 font-semibold">Sign In</Text>
-
-      {/* Email Field */}
       <KeyboardAvoidingView className="w-full mb-4">
         {/* <Text className="text-lg font-medium mb-2 text-gray-300">
           Email Address

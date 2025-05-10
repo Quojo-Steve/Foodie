@@ -117,10 +117,9 @@ const OtpPage = () => {
             <Text className="text-[#00bf63] font-bold ml-1">Resend</Text>
           </View>
 
-          {/* Continue Button */}
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate("Preferences")}
+            onPress={() => navigation.replace("Preferences")}
           >
             <Text
               style={{

@@ -11,13 +11,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/AntDesign"; // Using MaterialIcons for simplicity
 import Icon1 from "react-native-vector-icons/Ionicons"; // Using MaterialIcons for simplicity
 
-const PreferencesPage = () => {
+const PreferencesPage = ({ navigation }) => {
   // State for dropdown selections
   const [dietType, setDietType] = useState("Vegetarian");
   const [allergies, setAllergies] = useState("Peanuts");
   const [cuisine, setCuisine] = useState("Italian");
   const [cookingMethod, setCookingMethod] = useState("Grilled");
   const [exclusions, setExclusions] = useState("Sugar");
+  const handleSignIn = () => {
+    navigation.replace("Main");
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -43,7 +46,7 @@ const PreferencesPage = () => {
           <Text style={styles.descriptionText}>
             It's essential to provide you with detailed and flexible options to
             accommodate your diverse dietary needs.{" "}
-            <Text style={styles.skipText}>Skip for now</Text>
+            <Text onPress={() => navigation.replace("Main")} style={styles.skipText}>Skip for now</Text>
           </Text>
         </View>
 
@@ -118,7 +121,7 @@ const PreferencesPage = () => {
         />
 
         {/* Save Button */}
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSignIn}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   picker: {
-    height: 50,
+    height: 55,
   },
   saveButton: {
     backgroundColor: "#00bf63",
