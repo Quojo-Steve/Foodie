@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 const recipes = [
   {
     id: "1",
-    title: "Double cheese Burger",
+    title: "Double Cheese Burger",
     image: require("../assets/burger.jpg"), // Add your image here
     ingredients: 5,
     time: "30 min",
@@ -41,8 +41,23 @@ const recipes = [
 
 const savedRecipes = [];
 
-const RecipeCard = ({ item }) => (
-  <View style={styles.card}>
+const RecipeCard = ({ item, navigation }) => (
+  <TouchableOpacity
+    style={styles.card}
+    onPress={() =>
+      navigation.navigate("RecipeDetail", {
+        recipe: {
+          title: item.title,
+          ingredients: Array(item.ingredients).fill("Ingredient"), // Placeholder, adjust as needed
+          directions: ["Cook the meal.", "Serve hot."], // Placeholder, adjust as needed
+          rating: item.rating,
+          time: item.time,
+          image: item.image, // Pass the image if needed
+          videoUrl: 'https://www.youtube.com/watch?v=6tw9jOBEXzI'
+        },
+      })
+    }
+  >
     <Image source={item.image} style={styles.cardImage} />
     <Text style={styles.cardTitle}>{item.title}</Text>
     <Text style={styles.cardDetails}>
@@ -61,7 +76,7 @@ const RecipeCard = ({ item }) => (
         <Ionicons name="bookmarks-outline" size={14} color="black" />
       </TouchableOpacity>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
 const HomeScreen = ({ navigation }) => {
@@ -82,8 +97,8 @@ const HomeScreen = ({ navigation }) => {
       </View>
 
       {/* Search Bar - Fixed with TouchableOpacity instead of View */}
-      <TouchableOpacity 
-        style={styles.searchBox} 
+      <TouchableOpacity
+        style={styles.searchBox}
         onPress={() => navigation.navigate("Search")}
       >
         <Ionicons name="search" size={20} color="#888" />
@@ -98,7 +113,7 @@ const HomeScreen = ({ navigation }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <RecipeCard item={item} />}
+        renderItem={({ item }) => <RecipeCard item={item} navigation={navigation} />}
       />
 
       {/* Saved Recipes */}
@@ -110,7 +125,7 @@ const HomeScreen = ({ navigation }) => {
           style={styles.flatListContainer}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id + "saved"}
-          renderItem={({ item }) => <RecipeCard item={item} />}
+          renderItem={({ item }) => <RecipeCard item={item} navigation={navigation} />}
         />
       ) : (
         <View style={styles.emptyStateContainer}>
@@ -133,10 +148,10 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: { 
-    padding: 16, 
-    marginBottom: 60, 
-    backgroundColor: "white" 
+  container: {
+    padding: 16,
+    marginBottom: 60,
+    backgroundColor: "white",
   },
   header: {
     flexDirection: "row",
@@ -174,6 +189,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#fff",
+    marginBottom: 16,
     borderRadius: 12,
     marginRight: 12,
     width: 230,
@@ -223,16 +239,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   emptyStateContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 40,
     paddingHorizontal: 20,
   },
   emptyStateText: {
     fontSize: 16,
     marginTop: 8,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
     lineHeight: 22,
-  }
+  },
 });

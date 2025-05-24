@@ -4,13 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 
 const SplashScreen = ({ navigation }) => {
-  // Load custom font
-  // const [fontsLoaded] = useFonts({
-  //   'YourFont-Regular': require('../assets/fonts/Lato-Regular.ttf'),
-  // });
 
   useEffect(() => {
-    // console.log("Checking fonts...");
     const navigateAfterSplash = async () => {
         const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
         setTimeout(() => {
@@ -20,7 +15,6 @@ const SplashScreen = ({ navigation }) => {
             navigation.replace('Onboarding');
           }
         }, 3000);
-      
     };
   
     navigateAfterSplash();

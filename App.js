@@ -19,6 +19,7 @@ import ProfileScreen from './screens/ProfileScreen'; // You'll need to create th
 import NotificationsScreen from './screens/NotificationsScreen';
 import MainTabNavigator from './screens/MainTabNavigator';
 import SearchScreen from './screens/SearchScreen';
+import RecipeDetail from './screens/RecipeDetail';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,6 +60,7 @@ function App() {
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
         </Stack.Navigator>
     </NavigationContainer>
   );

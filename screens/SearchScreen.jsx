@@ -268,7 +268,8 @@ const styles = StyleSheet.create({
   },
   recipeDetails: {
     flex: 1,
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
