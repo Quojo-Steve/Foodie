@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f8f8",
   },
   scrollContent: {
-    paddingBottom: 30,
+    paddingBottom: 10,
   },
   header: {
     height: width * 0.7,
@@ -178,7 +178,8 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 24,
+    borderTopEndRadius: 24,
+    borderTopStartRadius: 24,
     padding: 24,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },

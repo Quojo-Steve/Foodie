@@ -37,7 +37,7 @@ const SignIn = ({ navigation }) => {
       {/* Logo */}
       <Image
         source={require("../assets/foodie_green1.png")}
-        className="h-32 w-56"
+        style={styles.logo}
       />
 
       <KeyboardAvoidingView className="w-full mb-4">
@@ -103,6 +103,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     backgroundColor: "transparent",
+  },
+  logo:{
+    width: 224,
+    height: 128
   },
   input: {
     flex: 1,

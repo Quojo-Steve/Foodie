@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,123 +6,83 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/AntDesign"; // Using MaterialIcons for simplicity
-import Icon1 from "react-native-vector-icons/Ionicons"; // Using MaterialIcons for simplicity
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const PreferencesPage = ({ navigation }) => {
-  // State for dropdown selections
   const [dietType, setDietType] = useState("Vegetarian");
   const [allergies, setAllergies] = useState("Peanuts");
   const [cuisine, setCuisine] = useState("Italian");
   const [cookingMethod, setCookingMethod] = useState("Grilled");
   const [exclusions, setExclusions] = useState("Sugar");
-  const handleSignIn = () => {
+
+  const handleSave = () => {
     navigation.replace("Main");
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {/* Header Section */}
+        {/* Header */}
         <View style={styles.header}>
-          <View style={styles.placeholderIcon}>
-            <Icon name="user" size={28} color="#9ca3af" style={styles.icon} />
+          <View style={styles.iconWrapper}>
+            <AntDesign name="user" size={24} color="#6b7280" />
           </View>
           <Text style={styles.headerTitle}>Dietary Preferences</Text>
-          <View style={styles.placeholderIcon}>
-            <Icon1
-              name="notifications-outline"
-              size={28}
-              color="#9ca3af"
-              style={styles.icon}
-            />
+          <View style={styles.iconWrapper}>
+            <Ionicons name="notifications-outline" size={24} color="#6b7280" />
           </View>
         </View>
 
         {/* Description */}
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.descriptionText}>
-            It's essential to provide you with detailed and flexible options to
-            accommodate your diverse dietary needs.{" "}
-            <Text onPress={() => navigation.replace("Main")} style={styles.skipText}>Skip for now</Text>
+        <Text style={styles.description}>
+          It's essential to provide you with detailed and flexible options to
+          accommodate your diverse dietary needs.{" "}
+          <Text style={styles.skipText} onPress={handleSave}>
+            Skip for now
           </Text>
-        </View>
+        </Text>
 
-        {/* Diet Type Dropdown */}
+        {/* Dropdowns */}
         <PreferenceDropdown
           label="Diet Type"
-          selectedValue={dietType}
-          onValueChange={setDietType}
-          items={[
-            { label: "Vegetarian", value: "Vegetarian" },
-            { label: "Vegan", value: "Vegan" },
-            { label: "Keto", value: "Keto" },
-            { label: "Paleo", value: "Paleo" },
-            { label: "None", value: "None" },
-          ]}
+          value={dietType}
+          setValue={setDietType}
+          data={["Vegetarian", "Vegan", "Keto", "Paleo", "None"]}
         />
 
-        {/* Allergies Dropdown */}
         <PreferenceDropdown
           label="Allergies"
-          selectedValue={allergies}
-          onValueChange={setAllergies}
-          items={[
-            { label: "Peanuts", value: "Peanuts" },
-            { label: "Dairy", value: "Dairy" },
-            { label: "Gluten", value: "Gluten" },
-            { label: "Shellfish", value: "Shellfish" },
-            { label: "None", value: "None" },
-          ]}
+          value={allergies}
+          setValue={setAllergies}
+          data={["Peanuts", "Dairy", "Gluten", "Shellfish", "None"]}
         />
 
-        {/* Cuisine Dropdown */}
         <PreferenceDropdown
           label="Cuisine"
-          selectedValue={cuisine}
-          onValueChange={setCuisine}
-          items={[
-            { label: "Italian", value: "Italian" },
-            { label: "Mexican", value: "Mexican" },
-            { label: "Indian", value: "Indian" },
-            { label: "Chinese", value: "Chinese" },
-            { label: "None", value: "None" },
-          ]}
+          value={cuisine}
+          setValue={setCuisine}
+          data={["Italian", "Mexican", "Indian", "Chinese", "None"]}
         />
 
-        {/* Cooking Methods Dropdown */}
         <PreferenceDropdown
-          label="Cooking Methods"
-          selectedValue={cookingMethod}
-          onValueChange={setCookingMethod}
-          items={[
-            { label: "Grilled", value: "Grilled" },
-            { label: "Baked", value: "Baked" },
-            { label: "Fried", value: "Fried" },
-            { label: "Steamed", value: "Steamed" },
-            { label: "None", value: "None" },
-          ]}
+          label="Cooking Method"
+          value={cookingMethod}
+          setValue={setCookingMethod}
+          data={["Grilled", "Baked", "Fried", "Steamed", "None"]}
         />
 
-        {/* Exclusions Dropdown */}
         <PreferenceDropdown
           label="Exclusions"
-          selectedValue={exclusions}
-          onValueChange={setExclusions}
-          items={[
-            { label: "Sugar", value: "Sugar" },
-            { label: "Salt", value: "Salt" },
-            { label: "Carbs", value: "Carbs" },
-            { label: "Fat", value: "Fat" },
-            { label: "None", value: "None" },
-          ]}
+          value={exclusions}
+          setValue={setExclusions}
+          data={["Sugar", "Salt", "Carbs", "Fat", "None"]}
         />
 
         {/* Save Button */}
-        <TouchableOpacity style={styles.saveButton} onPress={handleSignIn}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -129,26 +90,24 @@ const PreferencesPage = ({ navigation }) => {
   );
 };
 
-// Reusable dropdown component
-const PreferenceDropdown = ({ label, selectedValue, onValueChange, items }) => {
+const PreferenceDropdown = ({ label, value, setValue, data }) => {
+  const dropdownData = data.map((item) => ({ label: item, value: item }));
+
   return (
     <View style={styles.dropdownContainer}>
       <Text style={styles.dropdownLabel}>{label}</Text>
-      <View style={styles.dropdown}>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={onValueChange}
-          style={styles.picker}
-        >
-          {items.map((item) => (
-            <Picker.Item
-              key={item.value}
-              label={item.label}
-              value={item.value}
-            />
-          ))}
-        </Picker>
-      </View>
+      <Dropdown
+        style={styles.dropdown}
+        containerStyle={styles.dropdownMenu}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        data={dropdownData}
+        labelField="label"
+        valueField="value"
+        value={value}
+        onChange={(item) => setValue(item.value)}
+        placeholder="Select"
+      />
     </View>
   );
 };
@@ -156,69 +115,77 @@ const PreferenceDropdown = ({ label, selectedValue, onValueChange, items }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   scrollView: {
     paddingHorizontal: 16,
-    paddingBottom: 20,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 16,
-  },
-  placeholderIcon: {
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
-    width: 40,
-    height: 40,
+    paddingVertical: 20,
+  },
+  iconWrapper: {
     backgroundColor: "#e5e7eb",
     borderRadius: 20,
+    padding: 8,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "#111827",
   },
-  descriptionContainer: {
-    marginBottom: 24,
-  },
-  descriptionText: {
+  description: {
     fontSize: 14,
     color: "#4b5563",
+    marginBottom: 24,
+    lineHeight: 20,
   },
   skipText: {
     color: "#00bf63",
+    fontWeight: "600",
   },
   dropdownContainer: {
     marginBottom: 16,
   },
   dropdownLabel: {
+    fontSize: 16,
     color: "#374151",
     fontWeight: "600",
     marginBottom: 8,
-    fontSize: 16,
   },
   dropdown: {
-    borderWidth: 1,
+    height: 50,
     borderColor: "#d1d5db",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    backgroundColor: "#f9fafb",
+  },
+  dropdownMenu: {
     borderRadius: 8,
   },
-  picker: {
-    height: 55,
+  placeholderStyle: {
+    color: "#9ca3af",
+    fontSize: 14,
+  },
+  selectedTextStyle: {
+    color: "#111827",
+    fontSize: 14,
   },
   saveButton: {
     backgroundColor: "#00bf63",
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginBottom: 16,
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginTop: 20,
   },
   saveButtonText: {
-    color: "white",
+    color: "#fff",
+    fontSize: 16,
     textAlign: "center",
-    fontWeight: "600",
-    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 

@@ -8,7 +8,9 @@ import {
   Keyboard,
   StatusBar,
   Image,
+  Platform,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
@@ -50,10 +52,7 @@ const OtpPage = () => {
   };
 
   return (
-    <View
-      className="bg-white flex-1"
-      onPress={Keyboard.dismiss}
-    >
+    <View className="bg-white flex-1" onPress={Keyboard.dismiss}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
       <SafeAreaView style={{ flex: 1 }}>
@@ -68,7 +67,10 @@ const OtpPage = () => {
         </TouchableOpacity>
 
         {/* Centered Content */}
-        <View className="flex-1 justify-center items-center px-5">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-center items-center px-5"
+        >
           {/* Logo */}
           <Image
             source={require("../assets/foodie_green1.png")}
@@ -131,7 +133,7 @@ const OtpPage = () => {
               Continue
             </Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </View>
   );
