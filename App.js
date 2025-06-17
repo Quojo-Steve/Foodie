@@ -20,11 +20,9 @@ import NotificationsScreen from './screens/NotificationsScreen';
 import MainTabNavigator from './screens/MainTabNavigator';
 import SearchScreen from './screens/SearchScreen';
 import RecipeDetail from './screens/RecipeDetail';
+import SuggestRecipe from './screens/SuggestRecipe';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-// Bottom Tab Navigator for the main app
 
 function App() {
   const [initialRoute, setInitialRoute] = useState(null);
@@ -61,6 +59,7 @@ function App() {
         <Stack.Screen name="Main" component={MainTabNavigator} />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
+        <Stack.Screen name="SuggestRecipe" component={SuggestRecipe} />
         </Stack.Navigator>
     </NavigationContainer>
   );

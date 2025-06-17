@@ -6,62 +6,43 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  SafeAreaView,
   FlatList,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
-const recipes = [
-  {
-    id: "1",
-    title: "Double Cheese Burger",
-    image: require("../assets/burger.jpg"), // Add your image here
-    ingredients: 5,
-    time: "30 min",
-    rating: 2.4,
-  },
-  {
-    id: "2",
-    title: "Grilled Chicken",
-    image: require("../assets/chicken.jpg"),
-    ingredients: 5,
-    time: "25 min",
-    rating: 2.4,
-  },
-  {
-    id: "3",
-    title: "Grilled Chicken",
-    image: require("../assets/chicken.jpg"),
-    ingredients: 5,
-    time: "25 min",
-    rating: 2.4,
-  },
-];
+import recipeResults from "../data";
 
 const savedRecipes = [];
+
+const handleImageClicked = (item, navigation) => {
+  navigation.navigate("RecipeDetail", { recipeId: item.id });
+  // Example: navigation.navigate('QuickRecipeGenerator');
+};
 
 const RecipeCard = ({ item, navigation }) => (
   <TouchableOpacity
     style={styles.card}
-    onPress={() =>
-      navigation.navigate("RecipeDetail", {
-        recipe: {
-          title: item.title,
-          ingredients: Array(item.ingredients).fill("Ingredient"), // Placeholder, adjust as needed
-          directions: ["Cook the meal.", "Serve hot."], // Placeholder, adjust as needed
-          rating: item.rating,
-          time: item.time,
-          image: item.image, // Pass the image if needed
-          videoUrl: 'https://www.youtube.com/watch?v=6tw9jOBEXzI'
-        },
-      })
+    onPress={
+      () => handleImageClicked(item, navigation)
+      // navigation.navigate("RecipeDetail", {
+      //   recipe: {
+      //     title: item.title,
+      //     ingredients: Array(item.ingredients).fill("Ingredient"), // Placeholder, adjust as needed
+      //     directions: ["Cook the meal.", "Serve hot."], // Placeholder, adjust as needed
+      //     rating: item.rating,
+      //     time: item.time,
+      //     image: item.image, // Pass the image if needed
+      //     videoUrl: "https://www.youtube.com/watch?v=6tw9jOBEXzI",
+      //   },
+      // })
     }
   >
     <Image source={item.image} style={styles.cardImage} />
     <Text style={styles.cardTitle}>{item.title}</Text>
     <Text style={styles.cardDetails}>
-      {item.ingredients} ingredients ⏱ {item.time}
+      {item.ingredients.length} ingredients ⏱ {item.time}
     </Text>
     <View style={styles.ratingRowMain}>
       <View style={styles.ratingRow}>
@@ -81,67 +62,73 @@ const RecipeCard = ({ item, navigation }) => (
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+    <SafeAreaView style={styles.container1}>
+      <ScrollView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <Image
-          source={{ uri: "https://i.pravatar.cc/50" }}
-          style={styles.profilePic}
-        />
-        <Text style={styles.appName}>Foodie</Text>
-        <TouchableOpacity>
-          <Ionicons name="notifications-outline" size={24} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Search Bar - Fixed with TouchableOpacity instead of View */}
-      <TouchableOpacity
-        style={styles.searchBox}
-        onPress={() => navigation.navigate("Search")}
-      >
-        <Ionicons name="search" size={20} color="#888" />
-        <Text style={styles.searchInput}>Search for a recipe</Text>
-      </TouchableOpacity>
-
-      {/* Recommended Recipes */}
-      <Text style={styles.sectionTitle}>Recommended Recipes</Text>
-      <FlatList
-        data={recipes}
-        style={styles.flatListContainer}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <RecipeCard item={item} navigation={navigation} />}
-      />
-
-      {/* Saved Recipes */}
-      <Text style={styles.sectionTitle}>Saved Recipes</Text>
-      {savedRecipes.length > 0 ? (
-        <FlatList
-          data={savedRecipes}
-          horizontal
-          style={styles.flatListContainer}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id + "saved"}
-          renderItem={({ item }) => <RecipeCard item={item} navigation={navigation} />}
-        />
-      ) : (
-        <View style={styles.emptyStateContainer}>
-          <Ionicons
-            name="bookmarks-outline"
-            size={44}
-            color="gray"
-            style={{ marginBottom: 8 }}
+        {/* Header */}
+        <View style={styles.header}>
+          <Image
+            source={{ uri: "https://i.pravatar.cc/50" }}
+            style={styles.profilePic}
           />
-          <Text style={styles.emptyStateText}>
-            There is no saved items. Bookmark your favourites and see your
-            recipe history
-          </Text>
+          <Text style={styles.appName}>Foodie</Text>
+          <TouchableOpacity>
+            <Ionicons name="notifications-outline" size={24} />
+          </TouchableOpacity>
         </View>
-      )}
-    </ScrollView>
+
+        {/* Search Bar - Fixed with TouchableOpacity instead of View */}
+        <TouchableOpacity
+          style={styles.searchBox}
+          onPress={() => navigation.navigate("Search")}
+        >
+          <Ionicons name="search" size={20} color="#888" />
+          <Text style={styles.searchInput}>Search for a recipe</Text>
+        </TouchableOpacity>
+
+        {/* Recommended Recipes */}
+        <Text style={styles.sectionTitle}>Recommended Recipes</Text>
+        <FlatList
+          data={recipeResults}
+          style={styles.flatListContainer}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <RecipeCard item={item} navigation={navigation} />
+          )}
+        />
+
+        {/* Saved Recipes */}
+        <Text style={styles.sectionTitle}>Saved Recipes</Text>
+        {savedRecipes.length > 0 ? (
+          <FlatList
+            data={savedRecipes}
+            horizontal
+            style={styles.flatListContainer}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id + "saved"}
+            renderItem={({ item }) => (
+              <RecipeCard item={item} navigation={navigation} />
+            )}
+          />
+        ) : (
+          <View style={styles.emptyStateContainer}>
+            <Ionicons
+              name="bookmarks-outline"
+              size={44}
+              color="gray"
+              style={{ marginBottom: 8 }}
+            />
+            <Text style={styles.emptyStateText}>
+              There is no saved items. Bookmark your favourites and see your
+              recipe history
+            </Text>
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -152,6 +139,11 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 60,
     backgroundColor: "white",
+  },
+  container1: {
+    paddingTop: 20,
+    flex: 1,
+    backgroundColor: "#f8f8f8",
   },
   header: {
     flexDirection: "row",

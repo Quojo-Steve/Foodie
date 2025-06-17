@@ -12,23 +12,35 @@ import {
 import { WebView } from "react-native-webview";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import recipeResults from "../data";
+
 
 const { width } = Dimensions.get("window");
 
 const RecipeDetail = ({ route, navigation }) => {
-  const { recipe } = route.params || {};
+  const { recipeId } = route.params || {};
+  const recipe = recipeResults.find((r) => r.id === recipeId);
+
+  if (!recipe) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={{ padding: 20, fontSize: 16 }}>Recipe not found.</Text>
+      </SafeAreaView>
+    );
+  }
+
   const {
-    title = "Rotisserie Chicken",
+    title,
     ingredients = [],
     directions = [],
-    rating = "4.2",
-    time = "30 min",
-    difficulty = "Medium",
-    videoUrl = "https://www.youtube.com/embed/6tw9jOBEXzI",
-  } = recipe || {};
+    rating,
+    time,
+    difficulty,
+    image,
+    videoUrl,
+  } = recipe;
 
   const getEmbedUrl = (url) => {
-    if (!url) return null;
     const regExp =
       /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
@@ -41,12 +53,9 @@ const RecipeDetail = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header with Back Button and Gradient Overlay */}
+        {/* Header */}
         <View style={styles.header}>
-          <Image
-            source={require("../assets/chicken.jpg")}
-            style={styles.headerImage}
-          />
+          <Image source={image} style={styles.headerImage} />
           <LinearGradient
             colors={["rgba(0,0,0,0.7)", "transparent"]}
             style={styles.gradient}
@@ -59,9 +68,9 @@ const RecipeDetail = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Recipe Content Card */}
+        {/* Recipe Card */}
         <View style={styles.card}>
-          {/* Recipe Title and Meta */}
+          {/* Title and Meta */}
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{title}</Text>
             <View style={styles.metaContainer}>
@@ -80,24 +89,24 @@ const RecipeDetail = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* YouTube Video */}
+          {/* Video */}
           {embedUrl && (
-            <View style={styles.videoSection}>
+            <View style={styles.section}>
               <Text style={styles.sectionTitle}>Watch How To Make It</Text>
               <View style={styles.videoContainer}>
                 <WebView
                   source={{ uri: embedUrl }}
                   style={styles.video}
-                  javaScriptEnabled={true}
-                  domStorageEnabled={true}
-                  allowsFullscreenVideo={true}
-                  startInLoadingState={true}
+                  javaScriptEnabled
+                  domStorageEnabled
+                  allowsFullscreenVideo
+                  startInLoadingState
                 />
               </View>
             </View>
           )}
 
-          {/* Ingredients Section */}
+          {/* Ingredients */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Ingredients</Text>
@@ -115,7 +124,7 @@ const RecipeDetail = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* Directions Section */}
+          {/* Directions */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Directions</Text>

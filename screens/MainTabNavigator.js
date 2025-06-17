@@ -1,19 +1,20 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, TouchableOpacity, StyleSheet, Text, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
+import SuggestRecipe from './SuggestRecipe';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 const Tab = createBottomTabNavigator();
 
-const MainTabNavigator = () => {
+const MainTabNavigator = ({navigation}) => {
   const scale = useSharedValue(1);
 
   const handleCentralButtonPress = () => {
-    console.log('Central button pressed!');
-    // Example: navigation.navigate('QuickRecipeGenerator');
+    // This will now work because we're using the tab navigator's navigation
+    navigation.navigate('SuggestRecipe');
     scale.value = withSpring(1.2, { damping: 10, stiffness: 100 });
     setTimeout(() => {
       scale.value = withSpring(1);
@@ -49,10 +50,16 @@ const MainTabNavigator = () => {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen 
+          name="SuggestRecipe" 
+          component={SuggestRecipe}
+          options={{
+            tabBarButton: () => null, // Hide the tab bar button
+          }}
+        />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
 
-      {/* Central Floating Button with Animation */}
       <Animated.View style={[styles.centralButton, animatedCentralButtonStyle]}>
         <TouchableOpacity onPress={handleCentralButtonPress}>
           <Ionicons name="flash-outline" size={28} color="white" />
