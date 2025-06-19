@@ -2,10 +2,10 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import HomeScreen from './HomeScreen';
-import ProfileScreen from './ProfileScreen';
 import SuggestRecipe from './SuggestRecipe';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import Settings from './Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -57,7 +57,7 @@ const MainTabNavigator = ({navigation}) => {
             tabBarButton: () => null, // Hide the tab bar button
           }}
         />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Profile" component={Settings} />
       </Tab.Navigator>
 
       <Animated.View style={[styles.centralButton, animatedCentralButtonStyle]}>

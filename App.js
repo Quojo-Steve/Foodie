@@ -21,6 +21,8 @@ import MainTabNavigator from './screens/MainTabNavigator';
 import SearchScreen from './screens/SearchScreen';
 import RecipeDetail from './screens/RecipeDetail';
 import SuggestRecipe from './screens/SuggestRecipe';
+import AccountSecurity from './screens/AccountSecurity';
+import Terms from './screens/Terms';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +62,9 @@ function App() {
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
         <Stack.Screen name="SuggestRecipe" component={SuggestRecipe} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="AccountSecurity" component={AccountSecurity} />
+        <Stack.Screen name="Terms" component={Terms} />
         </Stack.Navigator>
     </NavigationContainer>
   );
