@@ -15,10 +15,12 @@
     "@react-navigation/bottom-tabs": "^7.3.9",
     "@react-navigation/native": "^7.0.15",
     "@react-navigation/native-stack": "^7.2.1",
+    "@supabase/supabase-js": "^2.50.5",
     "@ui-kitten/components": "^5.3.1",
     "@ui-kitten/eva-icons": "^5.3.1",
     "expo": "^53.0.0",
     "expo-font": "~13.3.1",
+    "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-status-bar": "~2.2.3",
     "nativewind": "^4.1.23",
@@ -32,8 +34,7 @@
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.2.0",
     "react-native-webview": "^13.13.5",
-    "tailwindcss": "^3.4.17",
-    "expo-image-picker": "~16.1.4"
+    "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

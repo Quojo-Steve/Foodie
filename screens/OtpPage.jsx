@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,19 +11,37 @@ import {
   Platform,
   TextInput,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { supabase } from "../lib/supabase";
 
 const OtpPage = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { email } = route.params;
 
   // States to hold OTP values
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [resendDisabled, setResendDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(30);
 
   // Refs to handle focus on inputs
   const inputRefs = useRef([]);
+
+  // Countdown timer for resend OTP
+  useEffect(() => {
+    let timer;
+    if (resendDisabled && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    } else if (countdown === 0) {
+      setResendDisabled(false);
+    }
+    return () => clearTimeout(timer);
+  }, [resendDisabled, countdown]);
 
   const handleChangeText = (value, index) => {
     if (value.length > 1) return; // Only allow one character per input
@@ -32,7 +50,10 @@ const OtpPage = () => {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    if (value !== "" && index < otp.length - 1) {
+    // Auto-submit when last digit is entered
+    if (value !== "" && index === otp.length - 1) {
+      handleVerify();
+    } else if (value !== "" && index < otp.length - 1) {
       // Move to the next input when a character is entered
       setActiveIndex(index + 1);
       inputRefs.current[index + 1].focus();
@@ -49,6 +70,50 @@ const OtpPage = () => {
 
   const handleFocus = (index) => {
     setActiveIndex(index);
+  };
+
+  const handleVerify = async () => {
+    const otpCode = otp.join("");
+    if (otpCode.length !== 6) {
+      Alert.alert("Error", "Please enter a 6-digit OTP");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token: otpCode,
+        type: "email",
+      });
+
+      if (error) throw error;
+
+      Alert.alert("Success", "Email verified successfully!");
+      navigation.replace("Preferences"); // Replace with your home screen
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setResendDisabled(true);
+    setCountdown(30);
+    
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+      });
+
+      if (error) throw error;
+
+      Alert.alert("Success", "New OTP sent to your email");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+      setResendDisabled(false);
+    }
   };
 
   return (
@@ -74,7 +139,7 @@ const OtpPage = () => {
           {/* Logo */}
           <Image
             source={require("../assets/foodie_green1.png")}
-            className="h-32 w-56 mb-5" // Reduced size for better balance
+            className="h-32 w-56 mb-5"
           />
 
           {/* Title and Description */}
@@ -85,7 +150,7 @@ const OtpPage = () => {
             Please enter the code we just sent to your email
           </Text>
           <Text className="font-bold text-center mb-10">
-            quojosteve@gmail.com
+            {email}
           </Text>
 
           {/* OTP Input Area */}
@@ -107,6 +172,7 @@ const OtpPage = () => {
                 keyboardType="numeric"
                 className="mr-3"
                 ref={(el) => (inputRefs.current[index] = el)}
+                editable={!loading}
               />
             ))}
           </View>
@@ -114,14 +180,23 @@ const OtpPage = () => {
           {/* Resend Option */}
           <View className="flex justify-center items-center flex-row my-6">
             <Text className="font-medium text-gray-400">
-              If you didn't receive a code?
+              If you didn't receive a code?{" "}
             </Text>
-            <Text className="text-[#00bf63] font-bold ml-1">Resend</Text>
+            {resendDisabled ? (
+              <Text className="text-gray-500 font-bold">
+                Resend in {countdown}s
+              </Text>
+            ) : (
+              <TouchableOpacity onPress={handleResendOTP}>
+                <Text className="text-[#00bf63] font-bold">Resend</Text>
+              </TouchableOpacity>
+            )}
           </View>
 
           <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.replace("Preferences")}
+            style={[styles.btn, loading && { opacity: 0.7 }]}
+            onPress={handleVerify}
+            disabled={loading}
           >
             <Text
               style={{
@@ -130,7 +205,7 @@ const OtpPage = () => {
                 color: "white",
               }}
             >
-              Continue
+              {loading ? "Verifying..." : "Continue"}
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -139,12 +214,10 @@ const OtpPage = () => {
   );
 };
 
-export default OtpPage;
-
 const styles = StyleSheet.create({
   btn: {
     height: 50,
-    width: "100%", // Full width of the parent container
+    width: "100%",
     borderRadius: 10,
     backgroundColor: "#00bf63",
     justifyContent: "center",
@@ -165,3 +238,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
 });
+
+export default OtpPage;
