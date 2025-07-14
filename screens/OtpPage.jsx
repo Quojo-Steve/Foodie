@@ -122,7 +122,7 @@ const OtpPage = () => {
 
       <SafeAreaView style={{ flex: 1 }}>
         {/* Back Arrow */}
-        <TouchableOpacity className="w-7 ml-5 mt-5">
+        <TouchableOpacity className="w-7 ml-5 mt-10">
           <AntDesign
             name="arrowleft"
             size={24}

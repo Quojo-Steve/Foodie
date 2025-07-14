@@ -26,80 +26,63 @@ const SignupPage = ({ navigation }) => {
   };
 
   const handleSignUp = async () => {
-    // Validate inputs
-    if (!email || !password || !confirmPassword || !phoneNumber) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
+  if (!email || !password || !confirmPassword || !phoneNumber) {
+    Alert.alert("Error", "Please fill in all fields");
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords don't match");
-      return;
-    }
+  if (password !== confirmPassword) {
+    Alert.alert("Error", "Passwords don't match");
+    return;
+  }
 
-    if (password.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters");
-      return;
-    }
+  if (password.length < 6) {
+    Alert.alert("Error", "Password must be at least 6 characters");
+    return;
+  }
 
-    // Validate email format
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      Alert.alert("Error", "Please enter a valid email address");
-      return;
-    }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    Alert.alert("Error", "Please enter a valid email address");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      // 1. Sign up the user (this automatically sends confirmation email)
-      const { data: signUpData, error: signUpError } =
-        await supabase.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: {
-              phone: phoneNumber,
-            },
-            emailRedirectTo: "your-app-scheme://auth/callback", // For deep linking
-          },
-        });
+  try {
+    // Sign up with Supabase (sends OTP email automatically if enabled)
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { phone: phoneNumber },
+        emailRedirectTo: "your-app-scheme://auth/callback", // optional for deep linking
+      },
+    });
 
-      if (signUpError) throw signUpError;
+    if (signUpError) throw signUpError;
 
-      // 2. Save additional user data to a separate table
-      const { error: profileError } = await supabase.from("profiles").upsert({
-        // Using upsert instead of insert to prevent duplicates
+    console.log("SignUp response:", signUpData);
+
+    // Store profile info if user is created immediately
+    if (signUpData.user) {
+      await supabase.from("profiles").upsert({
         id: signUpData.user.id,
-        email: email,
+        email,
         phone: phoneNumber,
         created_at: new Date().toISOString(),
       });
-
-      if (profileError) throw profileError;
-
-      // 3. Send OTP email (only if email confirmation is enabled in Supabase)
-      // Note: In newer Supabase versions, signUp() already sends confirmation email
-      const { error: otpError } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          emailRedirectTo: "your-app-scheme://auth/callback",
-        },
-      });
-
-      if (otpError) throw otpError;
-
-      // Navigate to OTP verification screen with email
-      navigation.navigate("OtpPage", { email });
-    } catch (error) {
-      console.error("Signup error:", error);
-      Alert.alert(
-        "Error",
-        error.message || "An error occurred during signup. Please try again."
-      );
-    } finally {
-      setLoading(false);
     }
-  };
+
+    // Navigate to OTP screen (only if email confirmation is required)
+    navigation.navigate("OtpPage", { email });
+  } catch (error) {
+    console.error("Signup error:", error);
+    Alert.alert("Error", error.message || "Signup failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <View className="bg-white flex-1 justify-center items-center px-5 pb-32">
