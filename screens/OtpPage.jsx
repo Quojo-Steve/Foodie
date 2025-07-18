@@ -15,12 +15,12 @@ import {
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { supabase } from "../lib/supabase";
 
 const OtpPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { email } = route.params;
+  const Url = "http://192.168.0.154:5000/"
 
   // States to hold OTP values
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -73,48 +73,67 @@ const OtpPage = () => {
   };
 
   const handleVerify = async () => {
-    const otpCode = otp.join("");
-    if (otpCode.length !== 6) {
-      Alert.alert("Error", "Please enter a 6-digit OTP");
-      return;
-    }
+  const otpCode = otp.join("");
 
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.verifyOtp({
+  if (otpCode.length !== 6) {
+    Alert.alert("Error", "Please enter a 6-digit OTP");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await fetch(`${Url}auth/verify-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         email,
-        token: otpCode,
-        type: "email",
-      });
+        otp: otpCode,
+      }),
+    });
 
-      if (error) throw error;
+    const result = await response.json();
 
-      Alert.alert("Success", "Email verified successfully!");
-      navigation.replace("Preferences"); // Replace with your home screen
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      throw new Error(result.error || "Verification failed");
     }
-  };
+
+    Alert.alert("Success", "Email verified successfully!");
+    navigation.replace("Preferences"); // or your next screen
+  } catch (error) {
+    Alert.alert("Error", error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleResendOTP = async () => {
-    setResendDisabled(true);
-    setCountdown(30);
-    
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-      });
+  setResendDisabled(true);
+  setCountdown(30);
 
-      if (error) throw error;
+  try {
+    const response = await fetch(`${Url}auth/resend-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
 
-      Alert.alert("Success", "New OTP sent to your email");
-    } catch (error) {
-      Alert.alert("Error", error.message);
-      setResendDisabled(false);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Failed to resend OTP");
     }
-  };
+
+    Alert.alert("Success", "A new OTP has been sent to your email");
+  } catch (error) {
+    Alert.alert("Error", error.message);
+    setResendDisabled(false); // Allow retry if failed
+  }
+};
 
   return (
     <View className="bg-white flex-1" onPress={Keyboard.dismiss}>

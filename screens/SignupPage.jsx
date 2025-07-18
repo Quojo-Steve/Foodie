@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { supabase } from "../lib/supabase"; // Make sure you have this configured
 
 const SignupPage = ({ navigation }) => {
+  const Url = "http://192.168.0.154:5000/"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,7 +25,7 @@ const SignupPage = ({ navigation }) => {
     navigation.replace("Signin");
   };
 
-  const handleSignUp = async () => {
+ const handleSignUp = async () => {
   if (!email || !password || !confirmPassword || !phoneNumber) {
     Alert.alert("Error", "Please fill in all fields");
     return;
@@ -49,32 +49,27 @@ const SignupPage = ({ navigation }) => {
   setLoading(true);
 
   try {
-    // Sign up with Supabase (sends OTP email automatically if enabled)
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { phone: phoneNumber },
-        emailRedirectTo: "your-app-scheme://auth/callback", // optional for deep linking
+    const response = await fetch(`${Url}auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        email,
+        password,
+        phone: phoneNumber,
+      }),
     });
 
-    if (signUpError) throw signUpError;
+    const result = await response.json();
 
-    console.log("SignUp response:", signUpData);
-
-    // Store profile info if user is created immediately
-    if (signUpData.user) {
-      await supabase.from("profiles").upsert({
-        id: signUpData.user.id,
-        email,
-        phone: phoneNumber,
-        created_at: new Date().toISOString(),
-      });
+    if (!response.ok) {
+      throw new Error(result.error || "Signup failed");
     }
 
-    // Navigate to OTP screen (only if email confirmation is required)
+    // Navigate to OTP screen, pass email
     navigation.navigate("OtpPage", { email });
+
   } catch (error) {
     console.error("Signup error:", error);
     Alert.alert("Error", error.message || "Signup failed");
@@ -82,6 +77,7 @@ const SignupPage = ({ navigation }) => {
     setLoading(false);
   }
 };
+
 
 
   return (

@@ -10,25 +10,44 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons"; // Using MaterialIcons for simplicity
-import { supabase } from "../lib/supabase";
 
 const SignIn = ({ navigation }) => {
+  const Url = "http://192.168.0.154:5000/"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = async () => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+const handleSignIn = async () => {
+  if (!email || !password) {
+    alert("Please enter both email and password");
+    return;
+  }
 
-  if (error) {
-    alert(error.message);
-  } else {
-    navigation.replace("Main"); // or navigate to a protected screen
+  try {
+    const response = await fetch(`${Url}auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Login failed");
+    }
+
+    alert("Login successful");
+    navigation.replace("Main"); // Replace with your home screen
+  } catch (error) {
+    alert(error.message || "An error occurred during login");
   }
 };
+
 
   const handleSignUp = () => {
     // Navigate to SignUp screen (you can create this later)
