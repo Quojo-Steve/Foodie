@@ -10,43 +10,42 @@ const recipeResults = [
       "Garlic powder",
       "Salt",
       "Black pepper",
-      "Vegetable oil"
+      "Vegetable oil",
     ],
     directions: [
       "Marinate chicken in buttermilk for 4 hours.",
       "Mix flour and spices in a bowl.",
       "Coat chicken in flour mixture.",
-      "Fry in hot oil until golden and cooked through."
+      "Fry in hot oil until golden and cooked through.",
     ],
     rating: 4.7,
     time: "30 min",
     category: "Dinner",
-    image: require("./assets/chicken.jpg"),
+    image: require("./assets/chicken.jpg"), // Adjust path as needed
     videoUrl: "https://www.youtube.com/watch?v=6tw9jOBEXzI",
   },
   {
     id: "2",
-    title: "Chicken Parmesan",
+    title: "Classic Margherita Pizza",
     ingredients: [
-      "Chicken breasts",
-      "Breadcrumbs",
-      "Parmesan cheese",
-      "Mozzarella cheese",
-      "Eggs",
-      "Marinara sauce",
-      "Olive oil"
+      "Pizza dough",
+      "Tomato sauce",
+      "Fresh mozzarella cheese",
+      "Fresh basil leaves",
+      "Olive oil",
+      "Salt and pepper",
     ],
     directions: [
-      "Coat chicken with egg, breadcrumbs, and Parmesan.",
-      "Pan-fry until golden.",
-      "Top with marinara and mozzarella.",
-      "Bake until cheese melts."
+      "Preheat oven to 475°F (245°C).",
+      "Roll out pizza dough and spread tomato sauce evenly.",
+      "Top with mozzarella and basil leaves.",
+      "Drizzle with olive oil, season, and bake for 12-15 minutes.",
     ],
-    rating: 4.5,
-    time: "45 min",
-    category: "Italian",
-    image: require("./assets/chicken.jpg"),
-    videoUrl: "https://www.youtube.com/watch?v=6tw9jOBEXzI",
+    rating: 4.6,
+    time: "35 min",
+    category: "Dinner",
+    image: require("./assets/pizza.jpg"), // Adjust path as needed
+    videoUrl: "https://www.youtube.com/watch?v=example",
   },
   {
     id: "3",

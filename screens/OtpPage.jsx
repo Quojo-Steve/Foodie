@@ -20,7 +20,7 @@ const OtpPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { email } = route.params;
-  const Url = "http://192.168.0.154:5000/"
+  const Url = "http://10.9.12.27:5000/";
 
   // States to hold OTP values
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);

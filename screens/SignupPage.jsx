@@ -7,95 +7,98 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
   Alert,
 } from "react-native";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const SignupPage = ({ navigation }) => {
-  const Url = "http://192.168.0.154:5000/"
+  const Url = "http://10.9.12.27:5000/";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = () => {
     navigation.replace("Signin");
   };
 
- const handleSignUp = async () => {
-  if (!email || !password || !confirmPassword || !phoneNumber) {
-    Alert.alert("Error", "Please fill in all fields");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    Alert.alert("Error", "Passwords don't match");
-    return;
-  }
-
-  if (password.length < 6) {
-    Alert.alert("Error", "Password must be at least 6 characters");
-    return;
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    Alert.alert("Error", "Please enter a valid email address");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const response = await fetch(`${Url}auth/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        phone: phoneNumber,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || "Signup failed");
+  const handleSignUp = async () => {
+    if (!email || !password || !confirmPassword || !phoneNumber) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
 
-    // Navigate to OTP screen, pass email
-    navigation.navigate("OtpPage", { email });
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords don't match");
+      return;
+    }
 
-  } catch (error) {
-    console.error("Signup error:", error);
-    Alert.alert("Error", error.message || "Signup failed");
-  } finally {
-    setLoading(false);
-  }
-};
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters");
+      return;
+    }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      Alert.alert("Error", "Please enter a valid email address");
+      return;
+    }
 
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${Url}auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          phone: phoneNumber,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Signup failed");
+      }
+
+      navigation.navigate("OtpPage", { email });
+    } catch (error) {
+      console.error("Signup error:", error);
+      Alert.alert("Error", error.message || "Signup failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <View className="bg-white flex-1 justify-center items-center px-5 pb-32">
-      <StatusBar barStyle="light-content" backgroundColor="#fff" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
       {/* Logo */}
       <Image
         source={require("../assets/foodie_green1.png")}
-        className="h-32 w-56"
+        style={styles.logo}
       />
 
-      {/* Email Field */}
-      <KeyboardAvoidingView className="w-full mb-4">
+      {/* Title */}
+      <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.subtitle}>Join us to get started</Text>
+
+      <KeyboardAvoidingView behavior="padding" style={styles.inputWrapper}>
+        {/* Email Field */}
         <View style={styles.inputContainer}>
-          <Icon name="email" size={24} color="#9ca3af" style={styles.icon} />
+          <Icon name="email" size={24} color="#6b7280" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Enter your email"
+            placeholderTextColor="#9ca3af"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -103,15 +106,14 @@ const SignupPage = ({ navigation }) => {
             autoCorrect={false}
           />
         </View>
-      </KeyboardAvoidingView>
 
-      {/* Phone Number Field */}
-      <KeyboardAvoidingView className="w-full mb-4">
+        {/* Phone Number Field */}
         <View style={styles.inputContainer}>
-          <Icon name="phone" size={24} color="#9ca3af" style={styles.icon} />
+          <Icon name="phone" size={24} color="#6b7280" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Enter your phone number"
+            placeholderTextColor="#9ca3af"
             value={phoneNumber}
             onChangeText={(text) => setPhoneNumber(text.replace(/[^0-9]/g, ""))}
             keyboardType="phone-pad"
@@ -119,15 +121,14 @@ const SignupPage = ({ navigation }) => {
             maxLength={15}
           />
         </View>
-      </KeyboardAvoidingView>
 
-      {/* Password Field */}
-      <KeyboardAvoidingView className="w-full mb-6">
+        {/* Password Field */}
         <View style={styles.inputContainer}>
-          <Icon name="lock" size={24} color="#9ca3af" style={styles.icon} />
+          <Icon name="lock" size={24} color="#6b7280" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Enter your password"
+            placeholderTextColor="#9ca3af"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
@@ -136,20 +137,19 @@ const SignupPage = ({ navigation }) => {
             <Icon
               name={showPassword ? "visibility" : "visibility-off"}
               size={24}
-              color="#9ca3af"
+              color="#6b7280"
               style={styles.icon}
             />
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
 
-      {/* Confirm Password Field */}
-      <KeyboardAvoidingView className="w-full mb-6">
+        {/* Confirm Password Field */}
         <View style={styles.inputContainer}>
-          <Icon name="lock" size={24} color="#9ca3af" style={styles.icon} />
+          <Icon name="lock" size={24} color="#6b7280" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Confirm your password"
+            placeholderTextColor="#9ca3af"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry={!showPassword}
@@ -158,27 +158,30 @@ const SignupPage = ({ navigation }) => {
             <Icon
               name={showPassword ? "visibility" : "visibility-off"}
               size={24}
-              color="#9ca3af"
+              color="#6b7280"
               style={styles.icon}
             />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
 
-      {/* Sign Up Button */}
+      {/* Sign Up Button with Loading State */}
       <TouchableOpacity
-        style={styles.signInButton}
+        style={[styles.signUpButton, isLoading && styles.signUpButtonDisabled]}
         onPress={handleSignUp}
-        disabled={loading}
+        disabled={isLoading}
       >
-        <Text className="text-white text-lg font-semibold">
-          {loading ? "Creating account..." : "Sign Up"}
-        </Text>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.signUpButtonText}>Sign Up</Text>
+        )}
       </TouchableOpacity>
 
-      <Text className="text-2xl font-light mb-5">
+      {/* Sign In Link */}
+      <Text style={styles.signInText}>
         Already have an account?{" "}
-        <Text className="text-[#00bf63] font-medium" onPress={handleSignIn}>
+        <Text style={styles.signInLink} onPress={handleSignIn}>
           Sign in
         </Text>
       </Text>
@@ -187,32 +190,87 @@ const SignupPage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f9fafb",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+  },
+  logo: {
+    width: 224,
+    height: 128,
+    marginBottom: 20,
+    transform: [{ scale: 1 }],
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#1f2937",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#6b7280",
+    marginBottom: 30,
+  },
+  inputWrapper: {
+    width: "100%",
+    marginBottom: 20,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: "transparent",
+    borderColor: "#d1d5db",
+    borderRadius: 12,
+    marginBottom: 16,
+    paddingHorizontal: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   input: {
     flex: 1,
-    height: 50,
+    height: 52,
     fontSize: 16,
-    color: "#515452",
+    color: "#1f2937",
   },
   icon: {
-    marginHorizontal: 10,
+    marginHorizontal: 8,
   },
-  signInButton: {
+  signUpButton: {
     backgroundColor: "#00bf63",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
+    paddingVertical: 16,
+    borderRadius: 12,
     width: "100%",
     alignItems: "center",
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  signUpButtonDisabled: {
+    backgroundColor: "#6ee7b7",
+  },
+  signUpButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  signInText: {
+    fontSize: 16,
+    color: "#6b7280",
+  },
+  signInLink: {
+    color: "#00bf63",
+    fontWeight: "600",
   },
 });
 
